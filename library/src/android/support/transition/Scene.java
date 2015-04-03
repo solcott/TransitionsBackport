@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.guerwan.transitionsbackport.R;
+
 /**
  * A scene represents the collection of values that various properties in the
  * View hierarchy will have when the scene is applied. A Scene can be
@@ -36,7 +38,6 @@ public final class Scene {
     private ViewGroup mSceneRoot;
     private ViewGroup mLayout; // alternative to layoutId
     Runnable mEnterAction, mExitAction;
-    private static ThreadLocal<SparseArray<Scene>> sScenes = new ThreadLocal<SparseArray<Scene>>();
 
     /**
      * Returns a Scene described by the resource file associated with the given
@@ -53,10 +54,10 @@ public final class Scene {
      * @return
      */
     public static Scene getSceneForLayout(ViewGroup sceneRoot, int layoutId, Context context) {
-        SparseArray<Scene> scenes = sScenes.get();
+        SparseArray<Scene> scenes = (SparseArray<Scene>) sceneRoot.getTag(R.id.tb_scene_layoutid_cache);
         if (scenes == null) {
             scenes = new SparseArray<Scene>();
-            sScenes.set(scenes);
+            sceneRoot.setTag(R.id.tb_scene_layoutid_cache, scenes);
         }
         Scene scene = scenes.get(layoutId);
         if (scene != null) {
